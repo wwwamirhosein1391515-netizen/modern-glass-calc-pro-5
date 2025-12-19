@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Amir & Abolfazl - Silver Liquid Edition</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --liquid-white: rgba(255, 255, 255, 0.7);
+            --liquid-border: rgba(255, 255, 255, 0.5);
+            --accent-silver: #94a3b8;
+            --text-main: #1e293b;
+            --glass-blur: blur(25px);
+            --radius-full: 60px;
+            --radius-btn: 50%;
+            --shadow-soft: 0 10px 40px rgba(0,0,0,0.06);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .liquid-blob {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            animation: float 25s infinite alternate ease-in-out;
+        }
+        .blob-1 { width: 500px; height: 500px; top: -100px; left: -100px; background: #e0f2fe; }
+        .blob-2 { width: 400px; height: 400px; bottom: -50px; right: -50px; background: #f1f5f9; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 40px) scale(1.1); }
+        }
+
+        .app-container {
+            width: 90%;
+            max-width: 420px;
+            height: 88vh;
+            background: var(--liquid-white);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1.5px solid var(--liquid-border);
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            z-index: 10;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 20;
+        }
+        
+        /* --- منوی ۳ نقطه و دراپ‌داون --- */
+        .menu-container { position: absolute; right: 5px; top: 0; }
+        .menu-trigger {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.03);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 1px solid white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 160px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 100;
+        }
+        .dropdown-menu.show { display: flex; }
+        .menu-item {
+            padding: 15px;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            text-align: right;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu-item:hover { background: rgba(0,0,0,0.05); }
+
+        h1 { font-size: 1.1rem; color: var(--text-main); font-weight: 800; }
+        .version-tag { font-size: 0.55rem; color: #94a3b8; letter-spacing: 3px; margin-top: 5px; }
+
+        .display-unit {
+            height: 110px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 40px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0 30px;
+        }
+        .display-main { 
+            font-size: 2.8rem; 
+            font-weight: 300; 
+            color: var(--text-main);
+            direction: ltr;
+            text-align: right;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .keypad { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 12px; 
+            flex: 1;
+            margin-top: 10px;
+        }
+        .liquid-btn {
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.5);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .liquid-btn:active { 
+            transform: scale(0.92); 
+            background: rgba(255,255,255,0.7);
+        }
+        .ac-btn { 
+            background: rgba(239, 68, 68, 0.1); 
+            color: #dc2626;
+            font-weight: 600;
+        }
+        .op-btn { 
+            background: rgba(0,0,0,0.03); 
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        .num-btn { 
+            background: rgba(255,255,255,0.5); 
+            color: var(--text-main);
+        }
+        .eq-btn { 
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8); 
+            color: white; 
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .zero-btn {
+            grid-column: span 2;
+            aspect-ratio: 2/1;
+            border-radius: 40px;
+            background: rgba(255,255,255,0.5);
+        }
+
+        /* --- صفحات جدید (شیشه‌ای) --- */
+        .full-page-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(40px);
+            border-radius: var(--radius-full);
+            z-index: 150;
+            padding: 30px;
+            display: none;
+            flex-direction: column;
+            animation: slideUp 0.4s ease-out;
+        }
+        @keyframes slideUp { 
+            from { transform: translateY(50px); opacity: 0; } 
+            to { transform: translateY(0); opacity: 1; } 
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transform: rotate(180deg);
+        }
+
+        .liquid-input { 
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 30px; 
+            border: 1px solid rgba(0,0,0,0.05); 
+            background: white; 
+            text-align: center; 
+            margin-bottom: 15px; 
+            font-size: 1rem;
+        }
+        .liquid-action-btn { 
+            width: 100%; 
+            padding: 20px; 
+            border-radius: 30px; 
+            border: none; 
+            background: var(--text-main); 
+            color: white; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 1rem;
+        }
+
+        .history-item {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .history-question {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        .history-answer {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            direction: ltr;
+            text-align: right;
+        }
+
+        .calc-formula {
+            font-size: 1rem;
+            color: #94a3b8;
+            direction: ltr;
+            text-align: right;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+
+    <div class="app-container">
+        <header>
+            <div class="menu-container">
+                <button class="menu-trigger" onclick="toggleMenu()">⋮</button>
+                <div class="dropdown-menu" id="main-menu">
+                    <button class="menu-item" onclick="openPage('converter-page')">🔄 تبدیل واحد</button>
+                    <button class="menu-item" onclick="openPage('history-page')">🕒 تاریخچه</button>
+                </div>
+            </div>
+            <h1>Amirhosein & Abolfazl</h1>
+            <div class="version-tag">SILVER LIQUID EDITION</div>
+        </header>
+
+        <div class="display-unit">
+            <div class="calc-formula" id="formula-view"></div>
+            <div class="display-main" id="result-view">0</div>
+        </div>
+
+        <div class="keypad">
+            <button class="liquid-btn ac-btn" onclick="handlePress('AC')">AC</button>
+            <button class="liquid-btn op-btn" onclick="handlePress('(')">(</button>
+            <button class="liquid-btn op-btn" onclick="handlePress(')')">)</button>
+            <button class="liquid-btn op-btn" onclick="handlePress('/')">÷</button>
+            
+            <button class="liquid-btn num-btn" onclick="handlePress('7')">7</button>
+            <button class="liquid-btn num-btn" onclick="handlePress('8')">8</button>
+            <button class="liquid-btn num-btn" onclick="handlePress('9')">9</button>
+            <button class="liquid-btn op-btn" onclick="handlePress('*')">×</button>
+            
+            <button class="liquid-btn num-btn" onclick="handlePress('4')">4</button>
+            <button class="liquid-btn num-btn" onclick="handlePress('5')">5</button>
+            <button class="liquid-btn num-btn" onclick="handlePress('6')">6</button>
+            <button class="liquid-btn op-btn" onclick="handlePress('-')">-</button>
+            
+            <button class="liquid-btn num-btn" onclick="handlePress('1')">1</button>
+            <button class="liquid-btn num-btn" onclick="handlePress('2')">2</button>
+            <button class="liquid-btn num-btn" onclick="handlePress('3')">3</button>
+            <button class="liquid-btn op-btn" onclick="handlePress('+')">+</button>
+            
+            <button class="liquid-btn num-btn" onclick="handlePress('.')">.</button>
+            <button class="liquid-btn zero-btn num-btn" onclick="handlePress('0')">0</button>
+            <button class="liquid-btn eq-btn" onclick="handlePress('=')">=</button>
+        </div>
+
+        <!-- صفحه تاریخچه -->
+        <div class="full-page-overlay" id="history-page">
+            <button class="back-btn" onclick="closePage('history-page')">></button>
+            <h2 style="text-align:center; margin-bottom:30px; color: var(--text-main);">تاریخچه محاسبات</h2>
+            <div id="history-list" style="overflow-y:auto; flex:1; padding: 10px;">
+                <!-- تاریخچه به صورت داینامیک پر می‌شود -->
+            </div>
+            <button class="liquid-action-btn" style="background:#fee2e2; color:#dc2626; margin-top: 15px;" onclick="clearHistory()">پاکسازی تاریخچه</button>
+        </div>
+
+        <!-- صفحه تبدیل واحد -->
+        <div class="full-page-overlay" id="converter-page">
+            <button class="back-btn" onclick="closePage('converter-page')">></button>
+            <h2 style="text-align:center; margin-bottom:30px; color: var(--text-main);">تبدیل واحد</h2>
+            
+            <select class="liquid-input" id="conv-type">
+                <option value="len">طول (متر به سانتیمتر)</option>
+                <option value="weight">وزن (کیلوگرم به گرم)</option>
+                <option value="temp">دما (سلسیوس به فارنهایت)</option>
+            </select>
+            <input type="number" class="liquid-input" id="conv-val" placeholder="مقدار را وارد کنید">
+            <button class="liquid-action-btn" onclick="runConversion()">تبدیل کن</button>
+            
+            <div class="display-unit" style="margin-top:20px; height:80px;">
+                <div class="display-main" id="conv-res" style="font-size:1.5rem">0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let state = { 
+            currentDisplay: '0', 
+            currentFormula: '', 
+            result: '0', 
+            history: [],
+            waitingForNewInput: false
+        };
+
+        function toggleMenu() { 
+            document.getElementById('main-menu').classList.toggle('show'); 
+        }
+        
+        function openPage(id) { 
+            if (id === 'history-page') {
+                updateHistoryUI();
+            }
+            document.getElementById(id).style.display = 'flex'; 
+            toggleMenu(); 
+        }
+        
+        function closePage(id) { 
+            document.getElementById(id).style.display = 'none'; 
+        }
+
+        function handlePress(val) {
+            if (val === 'AC') {
+                state.currentDisplay = '0';
+                state.currentFormula = '';
+                state.result = '0';
+                state.waitingForNewInput = false;
+            } else if (val === '=') {
+                try {
+                    // جایگزینی نمادهای ریاضی برای eval
+                    let expression = state.currentFormula
+                        .replace(/×/g, '*')
+                        .replace(/÷/g, '/')
+                        .replace(/(\d)\(/g, '$1*(') // برای ضرب ضمنی مثل 2(3)
+                        .replace(/\)\(/g, ')*(');
+                    
+                    // اگر فرمول خالی است، از نمایش فعلی استفاده کن
+                    if (!expression.trim()) {
+                        expression = state.currentDisplay;
+                    }
+                    
+                    // محاسبه نتیجه
+                    let res = eval(expression);
+                    
+                    // ذخیره در تاریخچه
+                    state.history.unshift({
+                        question: state.currentFormula || state.currentDisplay,
+                        answer: res
+                    });
+                    
+                    // ذخیره نتیجه
+                    state.result = formatNumber(res);
+                    state.currentDisplay = formatNumber(res);
+                    state.currentFormula = '';
+                    state.waitingForNewInput = true;
+                    
+                    // ذخیره در localStorage
+                    saveHistory();
+                } catch (error) {
+                    state.currentDisplay = 'Error';
+                    state.result = 'Error';
+                    setTimeout(() => {
+                        state.currentDisplay = '0';
+                        state.result = '0';
+                        updateDisplay();
+                    }, 1500);
+                }
+            } else {
+                // اگر در انتظار ورودی جدید هستیم، نمایش را پاک کن
+                if (state.waitingForNewInput && !isOperator(val)) {
+                    state.currentFormula = '';
+                    state.waitingForNewInput = false;
+                }
+                
+                // اگر نمایش "0" است و عدد وارد می‌شود، جایگزین کن
+                if (state.currentDisplay === '0' && !isOperator(val) && val !== '.' && val !== '(' && val !== ')') {
+                    state.currentDisplay = '';
+                }
+                
+                // اضافه کردن مقدار جدید
+                state.currentFormula += val;
+                
+                // به‌روزرسانی نمایش
+                if (isOperator(val)) {
+                    state.currentDisplay = state.currentFormula;
+                } else {
+                    state.currentDisplay = state.currentFormula;
+                }
+            }
+            
+            updateDisplay();
+        }
+
+        function isOperator(val) {
+            return ['+', '-', '×', '÷', '*', '/'].includes(val);
+        }
+
+        function formatNumber(num) {
+            // جلوگیری از نمایش اعداد خیلی بزرگ
+            let str = num.toString();
+            if (str.length > 12) {
+                return num.toExponential(6);
+            }
+            return str;
+        }
+
+        function updateDisplay() {
+            const formulaEl = document.getElementById('formula-view');
+            const resultEl = document.getElementById('result-view');
+            
+            formulaEl.textContent = state.currentFormula || '';
+            resultEl.textContent = state.currentDisplay || '0';
+        }
+
+        function runConversion() {
+            const type = document.getElementById('conv-type').value;
+            const val = parseFloat(document.getElementById('conv-val').value);
+            let res = 0;
+            
+            if (isNaN(val)) {
+                document.getElementById('conv-res').textContent = 'لطفاً عدد وارد کنید';
+                return;
+            }
+            
+            if (type === 'len') res = val * 100 + " cm";
+            else if (type === 'weight') res = val * 1000 + " g";
+            else if (type === 'temp') res = (val * 9/5) + 32 + " °F";
+            
+            document.getElementById('conv-res').textContent = res;
+        }
+
+        function updateHistoryUI() {
+            const list = document.getElementById('history-list');
+            
+            if (state.history.length === 0) {
+                list.innerHTML = '<div style="text-align:center; padding: 40px; color: #94a3b8;">تاریخچه محاسبات خالی است</div>';
+                return;
+            }
+            
+            list.innerHTML = state.history.map(h => `
+                <div class="history-item">
+                    <div class="history-question">${h.question}</div>
+                    <div class="history-answer">${h.answer}</div>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            state.history = [];
+            updateHistoryUI();
+            localStorage.removeItem('calculatorHistory');
+        }
+
+        function saveHistory() {
+            localStorage.setItem('calculatorHistory', JSON.stringify(state.history));
+        }
+
+        function loadHistory() {
+            const saved = localStorage.getItem('calculatorHistory');
+            if (saved) {
+                state.history = JSON.parse(saved);
+            }
+        }
+
+        // بستن منو با کلیک بیرون
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-trigger')) {
+                const menu = document.getElementById('main-menu');
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            }
+        }
+
+        // بارگذاری اولیه
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHistory();
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>
